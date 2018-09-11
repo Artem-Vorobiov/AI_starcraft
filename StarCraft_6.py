@@ -9,6 +9,7 @@ import random
 class SentdeBot(sc2.BotAI):
     def __init__(self):
         self.ITERATIONS_PER_MINUTE = 165
+        self.CONSTANT = 165
         self.MAX_WORKERS = 50
 
     async def on_step(self, iteration):
@@ -53,7 +54,10 @@ class SentdeBot(sc2.BotAI):
             await self.expand_now()
 
     async def offensive_force_buildings(self):
-        #print(self.iteration / self.ITERATIONS_PER_MINUTE)
+        print('\n','        ITERATION')
+        print(self.iteration)
+        print(self.ITERATIONS_PER_MINUTE)
+        print(self.iteration / self.ITERATIONS_PER_MINUTE)
         if self.units(PYLON).ready.exists:
             pylon = self.units(PYLON).ready.random
 
@@ -108,4 +112,4 @@ class SentdeBot(sc2.BotAI):
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Protoss, SentdeBot()),
     Computer(Race.Terran, Difficulty.Hard)
-    ], realtime=False)
+    ], realtime=True)

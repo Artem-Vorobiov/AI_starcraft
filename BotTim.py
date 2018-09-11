@@ -12,10 +12,9 @@ import random
 class Tim(sc2.BotAI):
 
 # 		Вопросы для решения 
-#   Ограничить колличество АССИМИЛЯТОРОВ до 3
-#   Проверить иожноли посчитать колличество объектов не используя цыкл, а используя встроенную функцию
-#   --> .amount or len()
-# 
+#   1. Моя задача - ОТОБРАЖАТЬ ВРЕМЯ через принт
+#   2. Моя задача выяснить сколько итерация в минуту используя пункт 1
+#   3. Задача воссоздать оставшиеся функции
 
 	def __init__(self):
 		self.ITERATIONS_PER_MINUTE = 165
@@ -53,7 +52,7 @@ class Tim(sc2.BotAI):
 			# print('\n')
 			# print('ASSIMILATOR :  ---- >')
 			# print(count)
-			if count >= 1 and self.can_afford(NEXUS) and self.units(NEXUS).amount < 2:
+			if count >= 1 and self.can_afford(NEXUS) and self.units(NEXUS).amount <=2 :
 				await self.expand_now()
 
 	async def build_assimilator(self):
