@@ -15,6 +15,8 @@ class Tim(sc2.BotAI):
 #   1. Моя задача - ОТОБРАЖАТЬ ВРЕМЯ через принт
 #   2. Моя задача выяснить сколько итерация в минуту используя пункт 1
 #   3. Задача воссоздать оставшиеся функции
+#	4. Corey watch Numpy
+#	5. Sentdex watch OpenCV
 
 	def __init__(self):
 		self.ITERATIONS_PER_MINUTE = 165
