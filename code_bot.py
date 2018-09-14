@@ -3,6 +3,7 @@ import pytz
 
 global time_point
 start_point = datetime.datetime.now().strftime("%S")
+my_list = []
 
 import sc2
 from sc2 import run_game, maps, Race, Difficulty, bot_ai
@@ -26,7 +27,7 @@ class Tim(sc2.BotAI):
 		await self.distribute_workers()
 		await self.build_workers()
 		await self.build_pylon()
-		# await self.build_assimilator()
+		await self.build_assimilator()
 		await self.expand()
 		await self.cacl()
 
@@ -34,7 +35,9 @@ class Tim(sc2.BotAI):
 		print(self.iteration)
 		print('\n')
 		if int(time_changed) == 15:
+			my_list.append(self.iteration)
 			print(self.iteration)
+			print(my_list)
 			print('\n\n\n\n\n')
 
 	async def build_workers(self):
@@ -54,20 +57,20 @@ class Tim(sc2.BotAI):
 				if self.can_afford(PYLON) and not self.already_pending(PYLON):
 					await self.build(PYLON, near = nexus)
 
-	# async def build_assimilator(self):
-	# 	assimilator_num = self.units(ASSIMILATOR).amount
-	# 	nexuses = self.units(NEXUS).ready
-	# 	pls = self.units(PYLON).amount
-	# 	if assimilator_num < 3 and pls >= 1:
-	# 		for nexus in self.units(NEXUS).ready:
-	# 			vgs = self.state.vespene_geyser.closer_than(20.0, nexus)
-	# 			for vg in vgs:
-	# 				if not self.can_afford(ASSIMILATOR):
-	# 					break
-	# 				elif not self.already_pending(ASSIMILATOR):
-	# 					if not self.units(ASSIMILATOR).closer_than(1.0, vg).exists:
-	# 						worker = self.select_build_worker(vg.position)
-	# 						await self.do(worker.build(ASSIMILATOR, vg))
+	async def build_assimilator(self):
+		assimilator_num = self.units(ASSIMILATOR).amount
+		nexuses = self.units(NEXUS).ready
+		pls = self.units(PYLON).amount
+		if assimilator_num < 3 and pls >= 1:
+			for nexus in self.units(NEXUS).ready:
+				vgs = self.state.vespene_geyser.closer_than(20.0, nexus)
+				for vg in vgs:
+					if not self.can_afford(ASSIMILATOR):
+						break
+					elif not self.already_pending(ASSIMILATOR):
+						if not self.units(ASSIMILATOR).closer_than(1.0, vg).exists:
+							worker = self.select_build_worker(vg.position)
+							await self.do(worker.build(ASSIMILATOR, vg))
 
 	async def expand(self):
 # ДОБАВИТЬ если прошло меньше 10 минут то строй 3 базы, больше 10 минут то строй 6 баз.
@@ -82,4 +85,4 @@ class Tim(sc2.BotAI):
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Protoss, Tim()),
     Computer(Race.Terran, Difficulty.Easy)
-], realtime=False)
+], realtime=True)
