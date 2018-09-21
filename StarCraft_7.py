@@ -38,7 +38,8 @@ class SentdeBot(sc2.BotAI):
         # Именно этот массив является основой изображения и он выводится на экран
         game_data = np.zeros((self.game_info.map_size[1], self.game_info.map_size[0], 3), np.uint8)
         print('\n', '\t GAME_DATA:')
-        print(game_data)
+        print(game_data)                            #    <class 'numpy.ndarray'>
+        print('\n GAME_DATA type: \n', type(game_data)) 
         for nexus in self.units(NEXUS):
             #  Находим на карте каждый ЦЕНТР
             nex_pos = nexus.position
