@@ -7,6 +7,11 @@ import random
 import cv2
 import numpy as np
 
+
+#   1.   Вывести через PRINT() переменные и тип переменной
+#   2.   Изучить новые функции - где берутся и как работают
+#   3.   Выписать логику в тетрадь
+
 class SentdeBot(sc2.BotAI):
     def __init__(self):
         self.ITERATIONS_PER_MINUTE = 165
@@ -26,12 +31,26 @@ class SentdeBot(sc2.BotAI):
         await self.attack()
 
     def random_location_variance(self, enemy_start_location):
-        x = enemy_start_location[0]
+        #   Цель найти координаты ВРАГА и отправить СКАУТА!
+
+        #   Определили начальные координаты ВРАГА
+        x = enemy_start_location[0]                             
+        print('\n x: \n', x)                                #    161.5      
+        print('\n type(x): \n', type(x))                    #   <class 'float'>
         y = enemy_start_location[1]
+        print('\n y: \n', y)                                #   21.5
+        print('\n type(y): \n', type(y))                    #   <class 'float'> 
 
+        #   Мы не можем посылать разведчика прямо в центр базы ВРАГА, по этому
+        #   Задаем отклонение X  и  Y
         x += ((random.randrange(-20, 20))/100) * enemy_start_location[0]
+        print('\n x: \n', x)                                #   142.12
+        print('\n type(x): \n', type(x))                    #   <class 'float'> 
         y += ((random.randrange(-20, 20))/100) * enemy_start_location[1]
+        print('\n y: \n', y)                                #   17.63
+        print('\n type(y): \n', type(y))                    #   <class 'float'> 
 
+        #   Координаты с учетом отклонения могут уйти за пределы игровой карты, для этого ставим проверки
         if x < 0:
             x = 0
         if y < 0:
@@ -41,22 +60,35 @@ class SentdeBot(sc2.BotAI):
         if y > self.game_info.map_size[1]:
             y = self.game_info.map_size[1]
 
+        #   Используем полученные координаты с учетом проверок и отправляем СКАУТА к базе врага
         go_to = position.Point2(position.Pointlike((x,y)))
+        print('\n go_to: \n', go_to)                        #   (142.12, 17.63)
+        print('\n type(go_to): \n', type(go_to))            #   <class 'sc2.position.Point2'>
         return go_to
 
     async def scout(self):
         if len(self.units(OBSERVER)) > 0:
-            scout = self.units(OBSERVER)[0]
+            scout = self.units(OBSERVER)[0]                 #   ТАКИМ ОБРАЗОМ МОЖНО ВЫБРАТЬ ОДИН ЮНИТ
             if scout.is_idle:
+
                 enemy_location = self.enemy_start_locations[0]
+                # print('\n enemy_location: \n', enemy_location)                #    (161.5, 21.5)               
+                # print('\n type(enemy_location): \n', type(enemy_location))    #    <class 'sc2.position.Point2'>
+
                 move_to = self.random_location_variance(enemy_location)
-                print(move_to)
+                # print('\n move_to: \n', move_to)                            #    (161.5, 21.93)               
+                # print('\n type(move_to): \n', type(move_to))                #    <class 'sc2.position.Point2'>
+                print(move_to)                                                #    (161.5, 21.93)
                 await self.do(scout.move(move_to))
+                # print('\n self.do(scout.move(move_to)): \n', self.do(scout.move(move_to)))              #   <coroutine object BotAI.do at 0x1198560f8>              
+                # print('\n type(self.do(scout.move(move_to))): \n', type(self.do(scout.move(move_to))))  #   <class 'coroutine'>
 
         else:
             for rf in self.units(ROBOTICSFACILITY).ready.noqueue:
                 if self.can_afford(OBSERVER) and self.supply_left > 0:
                     await self.do(rf.train(OBSERVER))
+                    # print('\n self.do(rf.train(OBSERVER)): \n', self.do(rf.train(OBSERVER)))                # <coroutine object BotAI.do at 0x1198591a8>          
+                    # print('\n type(self.do(rf.train(OBSERVER))): \n', type(self.do(rf.train(OBSERVER))))    # <class 'coroutine'>
 
     async def intel(self):
         game_data = np.zeros((self.game_info.map_size[1], self.game_info.map_size[0], 3), np.uint8)
@@ -64,6 +96,8 @@ class SentdeBot(sc2.BotAI):
         # UNIT: [SIZE, (BGR COLOR)]
         '''from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, GATEWAY, \
  CYBERNETICSCORE, STARGATE, VOIDRAY'''
+
+        #   Присвоили цвета каждому из юнитов
         draw_dict = {
                      NEXUS: [15, (0, 255, 0)],
                      PYLON: [3, (20, 235, 0)],
@@ -76,27 +110,45 @@ class SentdeBot(sc2.BotAI):
 
                      VOIDRAY: [3, (255, 100, 0)],
                      #OBSERVER: [3, (255, 255, 255)],
+        # print('\n draw_dict: \n', draw_dict)
+#   {<UnitTypeId.NEXUS: 59>: [15, (0, 255, 0)], <UnitTypeId.PYLON: 60>: [3, (20, 235, 0)], <UnitTypeId.PROBE: 84>: [1, (55, 200, 0)],
+#   <UnitTypeId.ASSIMILATOR: 61>: [2, (55, 200, 0)], <UnitTypeId.GATEWAY: 62>: [3, (200, 100, 0)], <UnitTypeId.CYBERNETICSCORE: 72>: [3, (150, 150, 0)], 
+#   <UnitTypeId.STARGATE: 67>: [5, (255, 0, 0)], <UnitTypeId.ROBOTICSFACILITY: 71>: [5, (215, 155, 0)], <UnitTypeId.VOIDRAY: 80>: [3, (255, 100, 0)]}
+        # print('\n type(draw_dict): \n', type(draw_dict))    #   <class 'dict'>
                     }
 
+
+        #   Перебираем юнитов и выводич их на карту в виду кругов разного цвета
         for unit_type in draw_dict:
             for unit in self.units(unit_type).ready:
+
+                # print('\n unit: \n', unit)                #     Unit(name='CyberneticsCore', tag=4359192577)
+                #   ИЛИ  Unit(name='RoboticsFacility', tag=4361814017)      ИЛИ      Unit(name='Assimilator', tag=4364173313)
+                #   ИЛИ  Unit(name='Probe', tag=4353163265)                 ИЛИ      Unit(name='Pylon', tag=4360503297)              
+                # print('\n type(unit): \n', type(unit))    #    <class 'sc2.unit.Unit'>
+
                 pos = unit.position
+                # print('\n pos: \n', pos)                #   For first unit in loop =  (161.5, 21.5)                
+                # print('\n type(pos): \n', type(pos))    #    <class 'sc2.position.Point2'>
+                #   cv2.circle(img, center, radius, color[, thickness[, lineType[, shift]]])
                 cv2.circle(game_data, (int(pos[0]), int(pos[1])), draw_dict[unit_type][0], draw_dict[unit_type][1], -1)
 
 
-
+        #   Разделяю базу противника на 2 цвета. Один цвет соотвествует заданному списку, другой все остальное.
         main_base_names = ["nexus", "supplydepot", "hatchery"]
         for enemy_building in self.known_enemy_structures:
             pos = enemy_building.position
             if enemy_building.name.lower() not in main_base_names:
+            #   cv2.circle(img, center, radius, color[, thickness[, lineType[, shift]]])
                 cv2.circle(game_data, (int(pos[0]), int(pos[1])), 5, (200, 50, 212), -1)
         for enemy_building in self.known_enemy_structures:
             pos = enemy_building.position
             if enemy_building.name.lower() in main_base_names:
                 cv2.circle(game_data, (int(pos[0]), int(pos[1])), 15, (0, 0, 255), -1)
 
-        for enemy_unit in self.known_enemy_units:
 
+        #   Разделяем вражеских юнитов на 2 части - если рабочие один цвет, все другие другой цвет
+        for enemy_unit in self.known_enemy_units:
             if not enemy_unit.is_structure:
                 worker_names = ["probe",
                                 "scv",
@@ -109,6 +161,8 @@ class SentdeBot(sc2.BotAI):
                     cv2.circle(game_data, (int(pos[0]), int(pos[1])), 3, (50, 0, 215), -1)
 
         for obs in self.units(OBSERVER).ready:
+            # print('\n obs: \n', obs)                #    Unit(name='Observer', tag=4369416193)               
+            # print('\n type(obs): \n', type(obs))    #    <class 'sc2.unit.Unit'>
             pos = obs.position
             cv2.circle(game_data, (int(pos[0]), int(pos[1])), 1, (255, 255, 255), -1)
 
