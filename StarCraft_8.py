@@ -35,20 +35,20 @@ class SentdeBot(sc2.BotAI):
 
         #   Определили начальные координаты ВРАГА
         x = enemy_start_location[0]                             
-        print('\n x: \n', x)                                #    161.5      
-        print('\n type(x): \n', type(x))                    #   <class 'float'>
+        # print('\n x: \n', x)                                #    161.5      
+        # print('\n type(x): \n', type(x))                    #   <class 'float'>
         y = enemy_start_location[1]
-        print('\n y: \n', y)                                #   21.5
-        print('\n type(y): \n', type(y))                    #   <class 'float'> 
+        # print('\n y: \n', y)                                #   21.5
+        # print('\n type(y): \n', type(y))                    #   <class 'float'> 
 
         #   Мы не можем посылать разведчика прямо в центр базы ВРАГА, по этому
         #   Задаем отклонение X  и  Y
         x += ((random.randrange(-20, 20))/100) * enemy_start_location[0]
-        print('\n x: \n', x)                                #   142.12
-        print('\n type(x): \n', type(x))                    #   <class 'float'> 
+        # print('\n x: \n', x)                                #   142.12
+        # print('\n type(x): \n', type(x))                    #   <class 'float'> 
         y += ((random.randrange(-20, 20))/100) * enemy_start_location[1]
-        print('\n y: \n', y)                                #   17.63
-        print('\n type(y): \n', type(y))                    #   <class 'float'> 
+        # print('\n y: \n', y)                                #   17.63
+        # print('\n type(y): \n', type(y))                    #   <class 'float'> 
 
         #   Координаты с учетом отклонения могут уйти за пределы игровой карты, для этого ставим проверки
         if x < 0:
@@ -61,9 +61,9 @@ class SentdeBot(sc2.BotAI):
             y = self.game_info.map_size[1]
 
         #   Используем полученные координаты с учетом проверок и отправляем СКАУТА к базе врага
-        go_to = position.Point2(position.Pointlike((x,y)))
-        print('\n go_to: \n', go_to)                        #   (142.12, 17.63)
-        print('\n type(go_to): \n', type(go_to))            #   <class 'sc2.position.Point2'>
+        go_to = position.Point2(position.Pointlike((x,y)))        #   КЛЮЧЕВЫЕ ФУНКЦИИ ДВИЖЕНИЯ
+        # print('\n go_to: \n', go_to)                            #   (142.12, 17.63)
+        # print('\n type(go_to): \n', type(go_to))                #   <class 'sc2.position.Point2'>
         return go_to
 
     async def scout(self):
@@ -130,6 +130,7 @@ class SentdeBot(sc2.BotAI):
                 pos = unit.position
                 # print('\n pos: \n', pos)                #   For first unit in loop =  (161.5, 21.5)                
                 # print('\n type(pos): \n', type(pos))    #    <class 'sc2.position.Point2'>
+
                 #   cv2.circle(img, center, radius, color[, thickness[, lineType[, shift]]])
                 cv2.circle(game_data, (int(pos[0]), int(pos[1])), draw_dict[unit_type][0], draw_dict[unit_type][1], -1)
 
