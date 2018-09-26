@@ -16,8 +16,14 @@ model = Sequential()
 # print('\n MODEL \n', type(model))		#	<class 'keras.models.Sequential'>
 
 
-#	Class tf.keras.layers.Conv2D  AND tf.keras.layers.Convolution2D
-#	input_shape=(176, 200, 3) - мы используем именно эти данные так как это размер наших картинок из - game_info.map_size()
+#	-- Class tf.keras.layers.Conv2D  AND tf.keras.layers.Convolution2D
+#	-- conv2d(). Constructs a two-dimensional convolutional layer. +
+# Takes number of filters, filter kernel size, padding, and activation function as arguments.
+#	-- input_shape=(176, 200, 3) - ВХОДНАЯ ФОРМА(РАЗМЕР) -  мы используем именно эти данные +
+# так как это размер наших картинок из - game_info.map_size()
+#	-- padding: one of "valid" or "same" (case-insensitive).
+#	-- kernel_size = (3,3)
+
 one = model.add(Conv2D(32, (3, 3), padding='same',
                  input_shape=(176, 200, 3),
                  activation='relu'))
@@ -25,9 +31,14 @@ one = model.add(Conv2D(32, (3, 3), padding='same',
 # print('\n Conv2D \n', type(one))			#	<class 'NoneType'>
 
 model.add(Conv2D(32, (3, 3), activation='relu'))
+#	-- max_pooling2d(). Constructs a two-dimensional pooling layer using the max-pooling algorithm. 
+# Takes pooling filter size and stride as arguments.
 model.add(MaxPooling2D(pool_size=(2, 2)))
+#	-- keras.layers.Dropout(rate, noise_shape=None, seed=None)
+#	-- Dropout consists in randomly setting a fraction rate of input units to
+#  0 at each update during training time, which helps prevent overfitting.
 model.add(Dropout(0.2))
-
+  
 
 model.add(Conv2D(64, (3, 3), padding='same',
                  activation='relu'))
@@ -41,8 +52,16 @@ model.add(Conv2D(128, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.2))
 
-
+#	-- keras.layers.Flatten(data_format=None)
+#	-- Flattens the input. Does not affect the batch size.
 model.add(Flatten())
+
+#	-- dense(). Constructs a dense layer. Takes number of neurons and activation function as arguments.
+#	-- keras.layers.Dense(units, activation=None, use_bias=True, kernel_initializer='glorot_uniform', 
+#	-- bias_initializer='zeros', kernel_regularizer=None, bias_regularizer=None, activity_regularizer=None, 
+#	-- kernel_constraint=None, bias_constraint=None)
+#	-- Just your regular densely-connected NN layer.
+
 model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.5))
 
