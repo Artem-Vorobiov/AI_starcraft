@@ -114,10 +114,10 @@ for i in range(hm_epochs):
             # print("\n data = {} ", data)                        #   Просто массив
             # print("\n data--TYPE = {} ", type(data))            #   <class 'numpy.ndarray'>
             data = list(data)
-            # print("\n data = {} ", data)                        #    Гиганский массив в который входит два массива -  ChoiseArray and PicturesArray
+            # print("\n data = {} ", data)                        #    Гиганский массив в который входит подМассивы, который в свою очередь включают - два массива -  ChoiseArray and PicturesArray
             # print("\n data--TYPE = {} ", type(data))            #   <class 'list'>
             for d in data:
-                # print("\n d = {} ", d)                      #   d - это или ChoiseArray или PicturesArray
+                # print("\n d = {} ", d)                      #   ChoiseArray и PicturesArray [[],[]]
                 # print("\n d--TYPE = {} ", type(d))          #   <class 'numpy.ndarray'>
 
                 #   Определяет максимальный аршумент в массиве. В нашем случае где номер 1 и возвращает его порядковый номер
@@ -167,8 +167,10 @@ for i in range(hm_epochs):
         check_data()
 
         train_data = no_attacks + attack_closest_to_nexus + attack_enemy_structures + attack_enemy_start
-        print("\n train_data ", train_data)                    #   [ChoiseArray and PicturesArray]
-        print("\n train_data TYPE", type(train_data))          #   <class 'list'>
+        # print("\n train_data ", train_data)                   #   [ChoiseArray and PicturesArray]
+        # print("\n train_data TYPE", type(train_data))           #   <class 'list'>
+        # print("\n train_data TYPE", type(train_data[0][0]))     #   <class 'numpy.ndarray'>
+        # print("\n train_data TYPE", type(train_data[0][1]))     #   <class 'numpy.ndarray'>
 
         random.shuffle(train_data)
         print(len(train_data))
@@ -176,19 +178,19 @@ for i in range(hm_epochs):
         test_size = 100
         batch_size = 128
 
-        # x_train = np.array([i[1] for i in train_data[:-test_size]]).reshape(-1, 176, 200, 3)
-        # y_train = np.array([i[0] for i in train_data[:-test_size]])
+        x_train = np.array([i[1] for i in train_data[:-test_size]]).reshape(-1, 176, 200, 3)
+        y_train = np.array([i[0] for i in train_data[:-test_size]])
 
-        # x_test = np.array([i[1] for i in train_data[-test_size:]]).reshape(-1, 176, 200, 3)
-        # y_test = np.array([i[0] for i in train_data[-test_size:]])
+        x_test = np.array([i[1] for i in train_data[-test_size:]]).reshape(-1, 176, 200, 3)
+        y_test = np.array([i[0] for i in train_data[-test_size:]])
 
-        # model.fit(x_train, y_train,
-        #           batch_size=batch_size,
-        #           validation_data=(x_test, y_test),
-        #           shuffle=True,
-        #           verbose=1, callbacks=[tensorboard])
+        model.fit(x_train, y_train,
+                  batch_size=batch_size,
+                  validation_data=(x_test, y_test),
+                  shuffle=True,
+                  verbose=1, callbacks=[tensorboard])
 
-        # model.save("BasicCNN-{}-epochs-{}-LR-STAGE1".format(hm_epochs, learning_rate))
-        # current += increment
-        # if current > maximum:
-        #     not_maximum = False
+        model.save("BasicCNN-{}-epochs-{}-LR-STAGE1".format(hm_epochs, learning_rate))
+        current += increment
+        if current > maximum:
+            not_maximum = False
