@@ -213,7 +213,7 @@ class SentdeBot(sc2.BotAI):
                 if obs in [probe for probe in self.units(PROBE)]:
                     await self.do(obs.move(self.random_location_variance(self.scouts_and_spots[obs.tag])))
 
-        print('What and Where => {}'.format(self.scouts_and_spots))     #   {4372037633: (34, 126), 4399562754: (39, 98), 4356046863: (36, 94)}
+        print('What and Where => {}'.format(self.scouts_and_spots))     #   {4372037633: (34, 126), 4399562754: (39, 98), 4356046863: (36, 94)} 
         print('Type => {}'.format(type(self.scouts_and_spots)))         #   <class 'dict'>
 
     async def intel(self):
